@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import "./App.css";
 
+const NBSP = String.fromCharCode(160);
 const COLUMN_COUNT = 7;
 const ROW_COUNT = 4;
 const MAX_NUMBER = 9;
 
 class App extends Component {
-    gridData = [];
+    previousGridClickValue = 0;
 
     constructor(props) {
         super(props);
 
+        const gridData = [];
         const numberSet = [];
 
         for (let i = 1; i <= ROW_COUNT * COLUMN_COUNT; i++) {
@@ -32,26 +34,43 @@ class App extends Component {
                 }
             }
 
-            this.gridData.push(row);
+            gridData.push(row);
         }
+
+        this.state = {
+            gridData: gridData,
+        };
     }
 
     onCellClicked(rowIndex, columnIndex) {
-        console.log("Clicked Y,X,value =", rowIndex, columnIndex, this.gridData[rowIndex][columnIndex]);
+        const gridData = this.state.gridData;
+
+        const value = gridData[rowIndex][columnIndex];
+        const isClickSuccess = value && value === this.previousGridClickValue + 1;
+
+        if (isClickSuccess) {
+            gridData[rowIndex][columnIndex] = null;
+
+            this.setState(() => ({
+                gridData: gridData,
+            }));
+
+            this.previousGridClickValue = value;
+        }
     }
 
     render() {
-        const grid = this.gridData.map((row, rowIndex) => {
+        const grid = this.state.gridData.map((row, rowIndex) => {
             const columns = row.map((cell, columnIndex) => {
                 return (
-                    <td>
-                        <div className="App-cell" onClick={() => this.onCellClicked(rowIndex, columnIndex)}>{cell}</div>
+                    <td key={columnIndex}>
+                        <div className="App-cell" onClick={() => this.onCellClicked(rowIndex, columnIndex)}>{cell || NBSP}</div>
                     </td>
                 );
             });
 
             return (
-                <tr className="App-row">{columns}</tr>
+                <tr className="App-row" key={rowIndex}>{columns}</tr>
             );
         });
 
