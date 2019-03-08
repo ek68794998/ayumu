@@ -24,6 +24,14 @@ class Grid extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            data: this.createNewGrid(),
+        };
+    }
+
+    createNewGrid() {
+        console.log("Generating new grid...");
+
         const gridData = [];
         const numberSet = [];
 
@@ -49,13 +57,11 @@ class Grid extends Component {
             gridData.push(row);
         }
 
-        this.state = {
-            gridData: gridData,
-        };
+        return gridData;
     }
 
     onCellClicked(rowIndex, columnIndex) {
-        const gridData = this.state.gridData;
+        let gridData = this.state.data;
 
         const value = gridData[rowIndex][columnIndex];
         const isClickSuccess = value && value === this.previousGridClickValue + 1;
@@ -69,22 +75,24 @@ class Grid extends Component {
 
             if (solved) {
                 console.log("SOLVED!");
+
+                gridData = this.createNewGrid();
+                this.previousGridClickValue = 0;
             } else {
                 console.log("One step closer...");
+                this.previousGridClickValue = value;
             }
 
             this.setState(() => ({
-                gridData: gridData,
+                data: gridData,
             }));
-
-            this.previousGridClickValue = value;
         } else {
             console.log("Incorrect choice:", value || "None");
         }
     }
 
     render() {
-        const grid = this.state.gridData.map((row, rowIndex) => {
+        const grid = this.state.data.map((row, rowIndex) => {
             const columns = row.map((cell, columnIndex) => {
                 return (
                     <td key={columnIndex}>
