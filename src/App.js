@@ -3,6 +3,7 @@ import "./App.css";
 
 const COLUMN_COUNT = 7;
 const ROW_COUNT = 4;
+const MAX_NUMBER = 9;
 
 class App extends Component {
     gridData = [];
@@ -10,13 +11,27 @@ class App extends Component {
     constructor(props) {
         super(props);
 
+        const numberSet = [];
+
+        for (let i = 1; i <= ROW_COUNT * COLUMN_COUNT; i++) {
+            numberSet.push(i);
+        }
+
+        numberSet.sort(() => 0.5 - Math.random());
+
+        console.log(numberSet);
+
         for (let i = 0; i < ROW_COUNT; i++) {
             let row = [];
 
-            for (let i = 0; i < COLUMN_COUNT; i++) {
-                let cell = Math.round(Math.random() * 100);
+            for (let j = 0; j < COLUMN_COUNT; j++) {
+                let cell = numberSet[j * ROW_COUNT + i];
 
-                row.push(cell);
+                if (cell <= MAX_NUMBER) {
+                    row.push(cell);
+                } else {
+                    row.push(null);
+                }
             }
 
             this.gridData.push(row);
@@ -24,8 +39,6 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.gridData);
-
         const grid = this.gridData.map((row) => {
             const columns = row.map((cell) => {
                 return (
