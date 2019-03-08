@@ -7,6 +7,18 @@ const ROW_COUNT = 4;
 const MAX_NUMBER = 9;
 
 class App extends Component {
+    render() {
+        return (
+            <div className="App">
+                <div className="App-container">
+                    <Grid />
+                </div>
+            </div>
+        );
+    }
+}
+
+class Grid extends Component {
     previousGridClickValue = 0;
 
     constructor(props) {
@@ -87,13 +99,9 @@ class App extends Component {
         });
 
         return (
-            <div className="App">
-                <div className="App-container">
-                    <table className="App-grid">
-                        <tbody>{grid}</tbody>
-                    </table>
-                </div>
-            </div>
+            <table className="App-grid">
+                <tbody>{grid}</tbody>
+            </table>
         );
     }
 }
