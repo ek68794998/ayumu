@@ -51,11 +51,23 @@ class App extends Component {
         if (isClickSuccess) {
             gridData[rowIndex][columnIndex] = null;
 
+            const solved = gridData.every((row) => {
+                return row.every((cell) => !cell);
+            });
+
+            if (solved) {
+                console.log("SOLVED!");
+            } else {
+                console.log("One step closer...");
+            }
+
             this.setState(() => ({
                 gridData: gridData,
             }));
 
             this.previousGridClickValue = value;
+        } else {
+            console.log("Incorrect choice:", value || "None");
         }
     }
 
