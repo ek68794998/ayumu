@@ -19,8 +19,6 @@ class App extends Component {
 
         numberSet.sort(() => 0.5 - Math.random());
 
-        console.log(numberSet);
-
         for (let i = 0; i < ROW_COUNT; i++) {
             let row = [];
 
@@ -38,18 +36,22 @@ class App extends Component {
         }
     }
 
+    onCellClicked(rowIndex, columnIndex) {
+        console.log("Clicked Y,X,value =", rowIndex, columnIndex, this.gridData[rowIndex][columnIndex]);
+    }
+
     render() {
-        const grid = this.gridData.map((row) => {
-            const columns = row.map((cell) => {
+        const grid = this.gridData.map((row, rowIndex) => {
+            const columns = row.map((cell, columnIndex) => {
                 return (
                     <td>
-                        <div class="App-cell">{cell}</div>
+                        <div className="App-cell" onClick={() => this.onCellClicked(rowIndex, columnIndex)}>{cell}</div>
                     </td>
                 );
             });
 
             return (
-                <tr class="App-row">{columns}</tr>
+                <tr className="App-row">{columns}</tr>
             );
         });
 
