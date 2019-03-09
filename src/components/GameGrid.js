@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./GameGrid.css";
+import "./GameGrid.scss";
 
 import { FlashMemoryMode } from "../game-modes/FlashMemoryMode";
 
