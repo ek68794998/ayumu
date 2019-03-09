@@ -14,7 +14,6 @@ export class GameGrid extends Component {
 
         this.state = {
             data: this.createNewGrid(),
-            valuesVisible: true,
         };
     }
 
