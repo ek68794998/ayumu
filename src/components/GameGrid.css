@@ -14,9 +14,13 @@
 }
 
 .GameGrid-cell.GameGrid-cell-solid {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.5);
 }
 
-.GameGrid-cell:hover {
+.GameGrid-cell.GameGrid-cell-value:hover {
     background: rgba(255, 255, 255, 0.1);
+}
+
+.GameGrid-cell.GameGrid-cell-solid:hover {
+    background: rgba(255, 255, 255, 0.75);
 }

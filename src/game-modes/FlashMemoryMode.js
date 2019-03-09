@@ -3,6 +3,7 @@ const DEFAULT_OPTIONS = {
     maxNumber: 9,
     minNumber: 1,
     numbers: [],
+    onUpdate: null,
     rowCount: 4,
 };
 
@@ -84,12 +85,14 @@ export class FlashMemoryMode {
             if (isCorrect) {
                 this.valuesSolved++;
                 cell.empty = true;
+                cell.solid = false;
             }
         }
 
         event.solved = this.totalNumbers() <= this.valuesSolved;
 
         this.events.push(event);
+        this.options.onUpdate && this.options.onUpdate();
     }
 
     resetGrid() {
@@ -116,6 +119,20 @@ export class FlashMemoryMode {
 
             this.gridData.push(row);
         }
+
+        this.options.onUpdate && this.options.onUpdate();
+
+        setTimeout(() => {
+            this.gridData.forEach((row) => {
+                row.forEach((cell) => {
+                    if (cell.value) {
+                        cell.solid = true;
+                    }
+                });
+            });
+
+            this.options.onUpdate && this.options.onUpdate();
+        }, 500);
     }
 
     totalNumbers() {

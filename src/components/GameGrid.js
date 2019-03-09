@@ -13,6 +13,7 @@ export class GameGrid extends Component {
         columnCount: COLUMN_COUNT,
         maxNumber: MAX_NUMBER,
         numbers: Array(ROW_COUNT * COLUMN_COUNT).fill().map((_, index) => index + 1),
+        onUpdate: () => this.onGameUpdate(),
         rowCount: ROW_COUNT,
     });
 
@@ -38,7 +39,9 @@ export class GameGrid extends Component {
 
             this.gameMode.resetGrid();
         }
+    }
 
+    onGameUpdate() {
         this.setState(() => ({
             data: this.gameMode.gridData,
         }));
@@ -56,8 +59,10 @@ export class GameGrid extends Component {
                         cellClasses.push("GameGrid-cell-solid");
                     } else if (cell.empty) {
                         cellValue = NBSP;
+                        cellClasses.push("GameGrid-cell-empty");
                     } else {
                         cellValue = cell.value;
+                        cellClasses.push("GameGrid-cell-value");
                     }
                 }
 
