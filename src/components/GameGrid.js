@@ -29,35 +29,15 @@ export class GameGrid extends Component {
     }
 
     onCellClicked(rowIndex, columnIndex) {
-        let gridData = this.state.data;
+        this.gameMode.onCellActivated(rowIndex, columnIndex);
 
-        const value = gridData[rowIndex][columnIndex];
-        const isClickSuccess = value && value === this.previousGridClickValue + 1;
-
-        if (isClickSuccess) {
-            gridData[rowIndex][columnIndex] = null;
-
-            const solved = gridData.every((row) => {
-                return row.every((cell) => !cell);
-            });
-
-            if (solved) {
-                console.log("SOLVED!");
-
-                this.gameMode.resetGrid();
-                gridData = this.gameMode.gridData;
-                this.previousGridClickValue = 0;
-            } else {
-                console.log("One step closer...");
-                this.previousGridClickValue = value;
-            }
-
-            this.setState(() => ({
-                data: gridData,
-            }));
-        } else {
-            console.log("Incorrect choice:", value || "None");
+        if (this.gameMode.isSolved()) {
+            this.gameMode.resetGrid();
         }
+
+        this.setState(() => ({
+            data: this.gameMode.gridData,
+        }));
     }
 
     render() {
