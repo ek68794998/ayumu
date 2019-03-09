@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 
-import { GameGrid } from "./GameGrid";
+import { GameGrid } from "./components/GameGrid";
 
 class App extends Component {
     render() {

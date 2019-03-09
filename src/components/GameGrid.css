@@ -6,7 +6,7 @@
 .GameGrid-cell {
     cursor: pointer;
     display: inline-block;
-    font-size: 4vmin;
+    font-size: 7vmin;
     height: 12vmin;
     line-height: 12vmin;
     padding: 8px;
