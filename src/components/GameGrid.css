@@ -1,5 +1,5 @@
 .GameGrid-grid {
-    margin: 0 auto;
+    margin: 16px auto;
     user-select: none;
 }
 
@@ -32,4 +32,14 @@
 
 .GameGrid-cell.GameGrid-cell-solid:hover {
     background: rgba(255, 255, 255, 0.75);
+}
+
+.GameGrid-status-header {
+    font-size: 32px;
+    text-transform: uppercase;
+}
+
+.GameGrid-status-text {
+    list-style: none;
+    padding: 0;
 }

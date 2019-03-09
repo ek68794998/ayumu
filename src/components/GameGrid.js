@@ -17,7 +17,7 @@ export class GameGrid extends Component {
         onSolve: () => this.onGameCompletedSuccessfully(),
         onUpdate: () => this.onGameUpdate(),
         rowCount: ROW_COUNT,
-        veilDurationMs: 1500,
+        veilDurationMs: 500,
     });
 
     previousGridClickValue = 0;
@@ -27,10 +27,17 @@ export class GameGrid extends Component {
 
         this.state = {
             data: [],
+            status: "",
+            events: [],
         };
     }
 
     newGame() {
+        this.setState(() => ({
+            status: null,
+            events: [],
+        }));
+
         this.gameMode.resetGrid();
     }
 
@@ -41,16 +48,16 @@ export class GameGrid extends Component {
     onInvalidNumberClicked() {
         this.gameMode.gameOver();
 
-        console.log("Game failed.");
-        console.log(this.gameMode.events.map((event) => {
-            return `[${event.elapsed}] ${event.type} (value=${event.value}, correct=${event.correct}, solved=${event.solved})`;
+        this.setState(() => ({
+            status: "Failed",
+            events: this.gameMode.getEventsList(),
         }));
     }
 
     onGameCompletedSuccessfully() {
-        console.log("Game solved!");
-        console.log(this.gameMode.events.map((event) => {
-            return `[${event.elapsed}] ${event.type} (value=${event.value}, correct=${event.correct}, solved=${event.solved})`;
+        this.setState(() => ({
+            status: "Completed",
+            events: this.gameMode.getEventsList(),
         }));
     }
 
@@ -94,6 +101,23 @@ export class GameGrid extends Component {
             );
         });
 
+        let gameStatus = null;
+
+        if (this.state.status && this.state.status.length) {
+            const eventText = this.state.events.map((eventText) => {
+                return (
+                    <li>{eventText}</li>
+                );
+            });
+
+            gameStatus = (
+                <div className="GameGrid-output">
+                    <h2 className="GameGrid-status-header">{this.state.status}</h2>
+                    <ul className="GameGrid-status-text">{eventText}</ul>
+                </div>
+            );
+        }
+
         return (
             <div className="GameGrid-container">
                 <div className="GameGrid-actions">
@@ -102,6 +126,7 @@ export class GameGrid extends Component {
                 <table className="GameGrid-grid">
                     <tbody>{grid}</tbody>
                 </table>
+                {gameStatus}
             </div>
         );
     }

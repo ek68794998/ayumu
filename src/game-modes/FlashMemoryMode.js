@@ -71,6 +71,7 @@ export class FlashMemoryMode {
     }
 
     gameOver() {
+        this.enabled = false;
         this.gridData.forEach((row) => {
             row.forEach((cell) => {
                 if (cell.value && !cell.empty) {
@@ -80,12 +81,23 @@ export class FlashMemoryMode {
         });
     }
 
+    getEventsList() {
+        return this.events.map((event) => {
+            const eventText =
+                event.solved
+                    ? `User solved with '${event.value}'`
+                    : `User ${event.type} ${event.correct ? "correct" : "incorrect"} '${event.value}'`
+
+            return `${event.elapsed / 1000} sec: ${eventText}`;
+        });
+    }
+
     isSolved() {
         return !this.sortedNumberSet[this.valuesSolved];
     }
 
     onCellActivated(rowIndex, columnIndex) {
-        if (!this.enabled) {
+        if (!this.enabled || this.isSolved()) {
             return;
         }
 
