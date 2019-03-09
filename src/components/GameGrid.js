@@ -17,6 +17,7 @@ export class GameGrid extends Component {
         onSolve: () => this.onGameCompletedSuccessfully(),
         onUpdate: () => this.onGameUpdate(),
         rowCount: ROW_COUNT,
+        veilDurationMs: 1500,
     });
 
     previousGridClickValue = 0;
@@ -38,6 +39,8 @@ export class GameGrid extends Component {
     }
 
     onInvalidNumberClicked() {
+        this.gameMode.gameOver();
+
         console.log("Game failed.");
         console.log(this.gameMode.events.map((event) => {
             return `[${event.elapsed}] ${event.type} (value=${event.value}, correct=${event.correct}, solved=${event.solved})`;
@@ -64,7 +67,10 @@ export class GameGrid extends Component {
                 let cellValue = "-";
 
                 if (cell) {
-                    if (cell.solid) {
+                    if (cell.failed) {
+                        cellValue = cell.value;
+                        cellClasses.push("GameGrid-cell-failed");
+                    } else if (cell.solid) {
                         cellValue = NBSP;
                         cellClasses.push("GameGrid-cell-solid");
                     } else if (cell.empty) {

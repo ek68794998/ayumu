@@ -7,10 +7,13 @@ const DEFAULT_OPTIONS = {
     onSolve: null,
     onUpdate: null,
     rowCount: 4,
+    veilDurationMs: 500,
 };
 
 export class GridCell {
     empty = false;
+
+    failed = false;
 
     solid = false;
 
@@ -30,6 +33,8 @@ export class GridEvent {
 }
 
 export class FlashMemoryMode {
+    enabled = false;
+
     events = [];
 
     gridData = [];
@@ -65,13 +70,39 @@ export class FlashMemoryMode {
         this.sortedNumberSet.sort();
     }
 
+    gameOver() {
+        this.gridData.forEach((row) => {
+            row.forEach((cell) => {
+                if (cell.value && !cell.empty) {
+                    cell.failed = true;
+                }
+            });
+        });
+    }
+
     isSolved() {
         return !this.sortedNumberSet[this.valuesSolved];
     }
 
     onCellActivated(rowIndex, columnIndex) {
+        if (!this.enabled) {
+            return;
+        }
+
         const cell = this.gridData[rowIndex][columnIndex];
-        const value = cell && cell.value;
+
+        if (!cell) {
+            throw new Error(`Invalid cell object at row ${rowIndex}, cell ${columnIndex}.`);
+        }
+
+        if (cell.failed) {
+            return;
+        }
+
+        let moveIsSolution = false;
+        let moveIsIncorrect = false;
+
+        const value = cell.value;
         const expectedValue = this.sortedNumberSet[this.valuesSolved];
 
         const event = new GridEvent();
@@ -90,10 +121,10 @@ export class FlashMemoryMode {
                 cell.solid = false;
 
                 if (this.isSolved()) {
-                    this.options.onSolve && this.options.onSolve();
+                    moveIsSolution = true;
                 }
             } else {
-                this.options.onFail && this.options.onFail();
+                moveIsIncorrect = true;
             }
         }
 
@@ -101,9 +132,16 @@ export class FlashMemoryMode {
 
         this.events.push(event);
         this.options.onUpdate && this.options.onUpdate();
+
+        if (moveIsSolution) {
+            this.options.onSolve && this.options.onSolve();
+        } else if (moveIsIncorrect) {
+            this.options.onFail && this.options.onFail();
+        }
     }
 
     resetGrid() {
+        this.enabled = false;
         this.startTime = new Date();
 
         this.valuesSolved = 0;
@@ -140,7 +178,10 @@ export class FlashMemoryMode {
             });
 
             this.options.onUpdate && this.options.onUpdate();
-        }, 500);
+
+            this.startTime = new Date();
+            this.enabled = true;
+        }, this.options.veilDurationMs);
     }
 
     totalNumbers() {

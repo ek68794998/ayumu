@@ -21,6 +21,11 @@
     cursor: pointer;
 }
 
+.GameGrid-cell.GameGrid-cell-failed {
+    background: rgba(255, 0, 0, 0.3);
+    color: #f00;
+}
+
 .GameGrid-cell.GameGrid-cell-value:hover {
     background: rgba(255, 255, 255, 0.1);
 }
