@@ -3,6 +3,8 @@ const DEFAULT_OPTIONS = {
     maxNumber: 9,
     minNumber: 1,
     numbers: [],
+    onFail: null,
+    onSolve: null,
     onUpdate: null,
     rowCount: 4,
 };
@@ -86,10 +88,16 @@ export class FlashMemoryMode {
                 this.valuesSolved++;
                 cell.empty = true;
                 cell.solid = false;
+
+                if (this.isSolved()) {
+                    this.options.onSolve && this.options.onSolve();
+                }
+            } else {
+                this.options.onFail && this.options.onFail();
             }
         }
 
-        event.solved = this.totalNumbers() <= this.valuesSolved;
+        event.solved = this.isSolved();
 
         this.events.push(event);
         this.options.onUpdate && this.options.onUpdate();

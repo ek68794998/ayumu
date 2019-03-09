@@ -13,6 +13,8 @@ export class GameGrid extends Component {
         columnCount: COLUMN_COUNT,
         maxNumber: MAX_NUMBER,
         numbers: Array(ROW_COUNT * COLUMN_COUNT).fill().map((_, index) => index + 1),
+        onFail: () => this.onInvalidNumberClicked(),
+        onSolve: () => this.onGameCompletedSuccessfully(),
         onUpdate: () => this.onGameUpdate(),
         rowCount: ROW_COUNT,
     });
@@ -22,23 +24,31 @@ export class GameGrid extends Component {
     constructor(props) {
         super(props);
 
-        this.gameMode.resetGrid();
-
         this.state = {
-            data: this.gameMode.gridData,
+            data: [],
         };
+    }
+
+    newGame() {
+        this.gameMode.resetGrid();
     }
 
     onCellClicked(rowIndex, columnIndex) {
         this.gameMode.onCellActivated(rowIndex, columnIndex);
+    }
 
-        if (this.gameMode.isSolved()) {
-            console.log(this.gameMode.events.map((event) => {
-                return `[${event.elapsed}] ${event.type} (value=${event.value}, correct=${event.correct}, solved=${event.solved})`;
-            }));
+    onInvalidNumberClicked() {
+        console.log("Game failed.");
+        console.log(this.gameMode.events.map((event) => {
+            return `[${event.elapsed}] ${event.type} (value=${event.value}, correct=${event.correct}, solved=${event.solved})`;
+        }));
+    }
 
-            this.gameMode.resetGrid();
-        }
+    onGameCompletedSuccessfully() {
+        console.log("Game solved!");
+        console.log(this.gameMode.events.map((event) => {
+            return `[${event.elapsed}] ${event.type} (value=${event.value}, correct=${event.correct}, solved=${event.solved})`;
+        }));
     }
 
     onGameUpdate() {
@@ -79,9 +89,14 @@ export class GameGrid extends Component {
         });
 
         return (
-            <table className="GameGrid-grid">
-                <tbody>{grid}</tbody>
-            </table>
+            <div className="GameGrid-container">
+                <div className="GameGrid-actions">
+                    <button onClick={() => this.newGame()}>New game</button>
+                </div>
+                <table className="GameGrid-grid">
+                    <tbody>{grid}</tbody>
+                </table>
+            </div>
         );
     }
 }
