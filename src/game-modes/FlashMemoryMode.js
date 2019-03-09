@@ -189,10 +189,10 @@ export class FlashMemoryMode {
                 });
             });
 
-            this.options.onUpdate && this.options.onUpdate();
-
             this.startTime = new Date();
             this.enabled = true;
+
+            this.options.onUpdate && this.options.onUpdate();
         }, this.options.veilDurationMs);
     }
 

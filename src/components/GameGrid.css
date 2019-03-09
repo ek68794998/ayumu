@@ -12,25 +12,25 @@
     width: 12vmin;
 }
 
-.GameGrid-cell.GameGrid-cell-value {
-    cursor: pointer;
-}
-
-.GameGrid-cell.GameGrid-cell-solid {
-    background: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-}
-
 .GameGrid-cell.GameGrid-cell-failed {
     background: rgba(255, 0, 0, 0.3);
     color: #f00;
 }
 
-.GameGrid-cell.GameGrid-cell-value:hover {
+.GameGrid-grid-active .GameGrid-cell.GameGrid-cell-value {
+    cursor: pointer;
+}
+
+.GameGrid-grid-active .GameGrid-cell.GameGrid-cell-solid {
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.GameGrid-grid-active .GameGrid-cell.GameGrid-cell-value:hover {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.GameGrid-cell.GameGrid-cell-solid:hover {
+.GameGrid-grid-active .GameGrid-cell.GameGrid-cell-solid:hover {
     background: rgba(255, 255, 255, 0.75);
 }
 

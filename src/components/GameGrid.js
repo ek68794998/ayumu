@@ -104,9 +104,9 @@ export class GameGrid extends Component {
         let gameStatus = null;
 
         if (this.state.status && this.state.status.length) {
-            const eventText = this.state.events.map((eventText) => {
+            const eventText = this.state.events.map((eventText, eventIndex) => {
                 return (
-                    <li>{eventText}</li>
+                    <li key={eventIndex}>{eventText}</li>
                 );
             });
 
@@ -118,12 +118,18 @@ export class GameGrid extends Component {
             );
         }
 
+        const gridClasses = [ "GameGrid-grid" ];
+
+        if (this.gameMode.enabled) {
+            gridClasses.push("GameGrid-grid-active");
+        }
+
         return (
             <div className="GameGrid-container">
                 <div className="GameGrid-actions">
                     <button onClick={() => this.newGame()}>New game</button>
                 </div>
-                <table className="GameGrid-grid">
+                <table className={gridClasses.join(" ")}>
                     <tbody>{grid}</tbody>
                 </table>
                 {gameStatus}
