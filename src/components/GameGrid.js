@@ -1,51 +1,31 @@
 import React, { Component } from "react";
 import "./GameGrid.css";
 
+import { FlashMemoryMode } from "../game-modes/FlashMemoryMode";
+
 const NBSP = String.fromCharCode(160);
 const COLUMN_COUNT = 7;
 const ROW_COUNT = 4;
 const MAX_NUMBER = 9;
 
 export class GameGrid extends Component {
+    gameMode = new FlashMemoryMode({
+        columnCount: COLUMN_COUNT,
+        maxNumber: MAX_NUMBER,
+        numbers: Array(ROW_COUNT * COLUMN_COUNT).fill().map((_, index) => index + 1),
+        rowCount: ROW_COUNT,
+    });
+
     previousGridClickValue = 0;
 
     constructor(props) {
         super(props);
 
+        this.gameMode.resetGrid();
+
         this.state = {
-            data: this.createNewGrid(),
+            data: this.gameMode.gridData,
         };
-    }
-
-    createNewGrid() {
-        console.log("Generating new grid...");
-
-        const gridData = [];
-        const numberSet = [];
-
-        for (let i = 1; i <= ROW_COUNT * COLUMN_COUNT; i++) {
-            numberSet.push(i);
-        }
-
-        numberSet.sort(() => 0.5 - Math.random());
-
-        for (let i = 0; i < ROW_COUNT; i++) {
-            let row = [];
-
-            for (let j = 0; j < COLUMN_COUNT; j++) {
-                let cell = numberSet[j * ROW_COUNT + i];
-
-                if (cell <= MAX_NUMBER) {
-                    row.push(cell);
-                } else {
-                    row.push(null);
-                }
-            }
-
-            gridData.push(row);
-        }
-
-        return gridData;
     }
 
     onCellClicked(rowIndex, columnIndex) {
@@ -64,7 +44,8 @@ export class GameGrid extends Component {
             if (solved) {
                 console.log("SOLVED!");
 
-                gridData = this.createNewGrid();
+                this.gameMode.resetGrid();
+                gridData = this.gameMode.gridData;
                 this.previousGridClickValue = 0;
             } else {
                 console.log("One step closer...");
