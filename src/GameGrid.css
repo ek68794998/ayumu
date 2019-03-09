@@ -1,0 +1,22 @@
+.GameGrid-grid {
+    margin: 0 auto;
+    user-select: none;
+}
+
+.GameGrid-cell {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 4vmin;
+    height: 12vmin;
+    line-height: 12vmin;
+    padding: 8px;
+    width: 12vmin;
+}
+
+.GameGrid-cell.blind {
+    background: #fff;
+}
+
+.GameGrid-cell:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

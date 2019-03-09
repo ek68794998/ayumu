@@ -12,26 +12,3 @@
 .App-link {
     color: #61dafb;
 }
-
-.App-grid {
-    margin: 0 auto;
-    user-select: none;
-}
-
-.App-cell {
-    cursor: pointer;
-    display: inline-block;
-    font-size: 4vmin;
-    height: 12vmin;
-    line-height: 12vmin;
-    padding: 8px;
-    width: 12vmin;
-}
-
-.App-cell.blind {
-    background: #fff;
-}
-
-.App-cell:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
