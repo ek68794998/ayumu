@@ -32,6 +32,10 @@ export class GameGrid extends Component {
         this.gameMode.onCellActivated(rowIndex, columnIndex);
 
         if (this.gameMode.isSolved()) {
+            console.log(this.gameMode.events.map((event) => {
+                return `[${event.elapsed}] ${event.type} (value=${event.value}, correct=${event.correct}, solved=${event.solved})`;
+            }));
+
             this.gameMode.resetGrid();
         }
 
@@ -43,9 +47,23 @@ export class GameGrid extends Component {
     render() {
         const grid = this.state.data.map((row, rowIndex) => {
             const columns = row.map((cell, columnIndex) => {
+                const cellClasses = [ "GameGrid-cell" ];
+                let cellValue = "-";
+
+                if (cell) {
+                    if (cell.solid) {
+                        cellValue = NBSP;
+                        cellClasses.push("GameGrid-cell-solid");
+                    } else if (cell.empty) {
+                        cellValue = NBSP;
+                    } else {
+                        cellValue = cell.value;
+                    }
+                }
+
                 return (
                     <td key={columnIndex}>
-                        <div className="GameGrid-cell" onClick={() => this.onCellClicked(rowIndex, columnIndex)}>{cell || NBSP}</div>
+                        <div className={cellClasses.join(" ")} onClick={() => this.onCellClicked(rowIndex, columnIndex)}>{cellValue}</div>
                     </td>
                 );
             });

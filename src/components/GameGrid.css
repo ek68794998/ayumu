@@ -13,7 +13,7 @@
     width: 12vmin;
 }
 
-.GameGrid-cell.blind {
+.GameGrid-cell.GameGrid-cell-solid {
     background: #fff;
 }
 

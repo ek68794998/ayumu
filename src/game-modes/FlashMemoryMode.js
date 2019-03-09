@@ -6,7 +6,29 @@ const DEFAULT_OPTIONS = {
     rowCount: 4,
 };
 
+export class GridCell {
+    empty = false;
+
+    solid = false;
+
+    value = 0;
+}
+
+export class GridEvent {
+    correct = false;
+
+    elapsed = 0;
+
+    solved = false;
+
+    type = "";
+
+    value = 0;
+}
+
 export class FlashMemoryMode {
+    events = [];
+
     gridData = [];
 
     numberSet = [];
@@ -14,6 +36,8 @@ export class FlashMemoryMode {
     options = {};
 
     sortedNumberSet = [];
+
+    startTime = null;
 
     valuesSolved = 0;
 
@@ -36,8 +60,6 @@ export class FlashMemoryMode {
         }
 
         this.sortedNumberSet.sort();
-
-        console.log(this.options);
     }
 
     isSolved() {
@@ -45,27 +67,36 @@ export class FlashMemoryMode {
     }
 
     onCellActivated(rowIndex, columnIndex) {
-        const value = this.gridData[rowIndex][columnIndex];
+        const cell = this.gridData[rowIndex][columnIndex];
+        const value = cell && cell.value;
         const expectedValue = this.sortedNumberSet[this.valuesSolved];
 
-        if (expectedValue) {
+        const event = new GridEvent();
+        event.type = "select";
+        event.elapsed = new Date() - this.startTime;
+
+        if (value && expectedValue) {
             const isCorrect = value === expectedValue;
+
+            event.correct = isCorrect;
+            event.value = value;
 
             if (isCorrect) {
                 this.valuesSolved++;
-                this.gridData[rowIndex][columnIndex] = null;
-
-                console.log("Solved", this.valuesSolved, "of", this.sortedNumberSet.filter((value) => !!value).length, "values.");
-            } else {
-                console.log("Incorrect choice:", value || "None");
+                cell.empty = true;
             }
-        } else {
-            console.log("Already solved.");
         }
+
+        event.solved = this.totalNumbers() <= this.valuesSolved;
+
+        this.events.push(event);
     }
 
     resetGrid() {
+        this.startTime = new Date();
+
         this.valuesSolved = 0;
+        this.events = [];
         this.gridData = [];
 
         this.numberSet = this.sortedNumberSet.slice();
@@ -75,10 +106,19 @@ export class FlashMemoryMode {
             let row = [];
 
             for (let j = 0; j < this.options.columnCount; j++) {
-                row.push(this.numberSet[j * this.options.rowCount + i]);
+                const cell = new GridCell();
+                cell.value = this.numberSet[j * this.options.rowCount + i];
+                cell.empty = !cell.value;
+                cell.solid = false;
+
+                row.push(cell);
             }
 
             this.gridData.push(row);
         }
+    }
+
+    totalNumbers() {
+        return this.sortedNumberSet.filter((value) => !!value).length;
     }
 }
